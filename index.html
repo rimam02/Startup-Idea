@@ -1,0 +1,2037 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="Models/logo.png">
+    <title>NEEDLE & NOISE — Premium Vinyl Experience</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bungee&family=Cinzel:wght@400;500;700&family=Inter:wght@200;300;400;500&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+
+    <style>
+        :root {
+            --bg: #060608;
+            --gold: #d4af37;
+            --gold-grad: linear-gradient(135deg, #f3e5ab 0%, #d4af37 50%, #aa7c11 100%);
+            --gold-glow: rgba(212,175,55,0.2);
+            --text: #fcfcfc;
+            --muted: rgba(255,255,255,0.42);
+            --glass: rgba(14,14,18,0.55);
+            --glass-b: rgba(255,255,255,0.04);
+            --serif: 'Cinzel', serif;
+            --display: 'Playfair Display', serif;
+            --sans: 'Inter', sans-serif;
+            --ease: cubic-bezier(0.16,1,0.3,1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -ms-overflow-style: none;  /* IE and Edge */
+            scrollbar-width: none;  /* Firefox */
+        }
+
+        /* Hide scrollbar for Chrome, Safari and Opera */
+        ::-webkit-scrollbar {
+            display: none;
+        }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: var(--sans);
+            overflow-x: hidden;
+        }
+
+        /* ── CUSTOM CURSOR ── */
+        .cursor-ring {
+            position: fixed;
+            width: 32px; height: 32px;
+            border: 1px solid rgba(212,175,55,0.6);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9999;
+            transform: translate(-50%,-50%);
+            transition: transform 0.08s, width 0.3s var(--ease), height 0.3s var(--ease), border-color 0.3s;
+        }
+        .cursor-dot {
+            position: fixed;
+            width: 5px; height: 5px;
+            background: var(--gold);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9999;
+            transform: translate(-50%,-50%);
+        }
+        body:has(a:hover) .cursor-ring, body:has(button:hover) .cursor-ring {
+            width: 56px; height: 56px;
+            border-color: rgba(212,175,55,0.9);
+        }
+
+        /* ── AMBIENT GLOWS ── */
+        .ambient {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none; z-index: 0; overflow: hidden;
+        }
+        .glow-1 {
+            position: absolute; top: -15%; right: -10%;
+            width: 60vw; height: 60vw;
+            background: radial-gradient(circle, var(--gold-glow) 0%, transparent 70%);
+            filter: blur(140px);
+            animation: driftGlow 12s ease-in-out infinite alternate;
+        }
+        .glow-2 {
+            position: absolute; bottom: 30%; left: -10%;
+            width: 45vw; height: 45vw;
+            background: radial-gradient(circle, rgba(242,114,45,0.08) 0%, transparent 70%);
+            filter: blur(120px);
+            animation: driftGlow 16s ease-in-out infinite alternate-reverse;
+        }
+        @keyframes driftGlow {
+            0% { transform: translate(0,0) scale(1); }
+            100% { transform: translate(3%,4%) scale(1.1); }
+        }
+
+        /* ── NOISE OVERLAY ── */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.025'/%3E%3C/svg%3E");
+            pointer-events: none; z-index: 1;
+        }
+
+        /* ── HEADER ── */
+        header {
+            position: fixed; top: 0; left: 0; width: 100%;
+            padding: 28px 7%;
+            display: flex; justify-content: space-between; align-items: center;
+            z-index: 100;
+            background: rgba(6,6,8,0.6);
+            backdrop-filter: blur(24px);
+            border-bottom: 1px solid rgba(255,255,255,0.04);
+            transform: translateY(-100%);
+            animation: slideDown 0.9s 0.3s var(--ease) forwards;
+        }
+        @keyframes slideDown { to { transform: translateY(0); } }
+
+        .logo {
+            font-family: var(--serif);
+            font-size: 1.1rem;
+            letter-spacing: 6px;
+            color: var(--text);
+            text-decoration: none;
+        }
+
+        nav { display: flex; gap: 36px; align-items: center; }
+        nav a {
+            font-size: 0.72rem;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            color: var(--muted);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        nav a:hover { color: var(--gold); }
+
+        .nav-cta {
+            padding: 10px 28px;
+            background: var(--gold-grad);
+            color: #000 !important;
+            border-radius: 4px;
+            font-weight: 500;
+        }
+
+        /* ── HERO ── */
+        .hero {
+            min-height: 100vh;
+            display: grid;
+            grid-template-columns: 1.1fr 0.9fr;
+            align-items: center;
+            padding: 100px 7% 60px;
+            position: relative; z-index: 2;
+        }
+
+        .hero-text { opacity: 0; transform: translateY(50px); animation: riseUp 1.2s 0.6s var(--ease) forwards; }
+        @keyframes riseUp { to { opacity:1; transform:translateY(0); } }
+
+        .hero-tag {
+            font-size: 0.68rem; letter-spacing: 8px; text-transform: uppercase;
+            color: var(--gold); margin-bottom: 24px; font-weight: 500;
+            display: flex; align-items: center; gap: 12px;
+        }
+        .hero-tag::before {
+            content:''; width: 40px; height: 1px; background: var(--gold); opacity: 0.5;
+        }
+
+        .hero h1 {
+            font-family: var(--display);
+            font-size: clamp(3.5rem, 6vw, 6.5rem);
+            font-weight: 700;
+            line-height: 1.05;
+            margin-bottom: 28px;
+            background: linear-gradient(180deg, #fff 50%, rgba(255,255,255,0.5));
+            -webkit-background-clip: text; background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero-desc {
+            font-size: 1rem; font-weight: 300; line-height: 1.9;
+            color: var(--muted); margin-bottom: 48px; max-width: 480px;
+        }
+
+        .hero-btns { display: flex; gap: 16px; flex-wrap: wrap; }
+
+        .btn-gold {
+            display: inline-flex; align-items: center; gap: 10px;
+            padding: 18px 44px;
+            background: var(--gold-grad);
+            color: #000; font-size: 0.75rem; font-weight: 600;
+            text-transform: uppercase; letter-spacing: 4px;
+            border: none; border-radius: 6px; cursor: pointer;
+            text-decoration: none;
+            transition: all 0.4s var(--ease);
+            box-shadow: 0 12px 35px rgba(0,0,0,0.5);
+        }
+        .btn-gold:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 50px rgba(212,175,55,0.35);
+            letter-spacing: 6px;
+        }
+
+        .btn-outline {
+            display: inline-flex; align-items: center; gap: 10px;
+            padding: 18px 44px;
+            background: transparent;
+            color: var(--text); font-size: 0.75rem; font-weight: 500;
+            text-transform: uppercase; letter-spacing: 4px;
+            border: 1px solid rgba(255,255,255,0.18); border-radius: 6px;
+            cursor: pointer; text-decoration: none;
+            transition: all 0.4s var(--ease);
+        }
+        .btn-outline:hover {
+            background: rgba(255,255,255,0.05);
+            border-color: rgba(255,255,255,0.5);
+            transform: translateY(-4px);
+        }
+
+        /* VINYL DECK */
+        .hero-deck {
+            display: flex; justify-content: center; align-items: center;
+            opacity: 0; animation: riseUp 1.2s 0.9s var(--ease) forwards;
+        }
+
+        .player-deck {
+            position: relative; width: 440px; height: 470px;
+            background: var(--glass);
+            border: 1px solid rgba(255,255,255,0.04);
+            border-radius: 20px;
+            backdrop-filter: blur(30px);
+            box-shadow: 0 50px 100px rgba(0,0,0,0.7), inset 0 1px 0 rgba(255,255,255,0.05);
+            display: flex; flex-direction: column; align-items: center;
+            padding-top: 35px;
+            cursor: pointer;
+            transition: border-color 0.4s, box-shadow 0.4s;
+        }
+        .player-deck:hover {
+            border-color: rgba(212,175,55,0.2);
+            box-shadow: 0 60px 120px rgba(0,0,0,0.8), 0 0 80px rgba(212,175,55,0.08), inset 0 1px 0 rgba(255,255,255,0.08);
+        }
+
+        .platter {
+            width: 315px; height: 315px;
+            background: radial-gradient(circle, #141417 60%, #0a0a0c);
+            border-radius: 50%;
+            border: 1px solid rgba(255,255,255,0.02);
+            box-shadow: inset 0 0 30px rgba(0,0,0,0.9), 0 10px 25px rgba(0,0,0,0.5);
+            position: absolute; left: 43px; top: 38px; z-index: 2;
+        }
+
+        .tonearm {
+            position: absolute; top: 33px; right: 52px;
+            width: 15px; height: 190px;
+            background: linear-gradient(90deg, #444 0%, #777 50%, #222);
+            border-radius: 4px;
+            transform-origin: 7.5px 18px;
+            transform: rotate(-24deg);
+            transition: transform 1.4s cubic-bezier(0.25,1,0.5,1);
+            z-index: 6;
+            box-shadow: -8px 12px 20px rgba(0,0,0,0.6);
+        }
+        .tonearm::after {
+            content:''; position: absolute; bottom: -5px; left: -4px;
+            width: 23px; height: 33px; background: #111; border: 1px solid #333;
+            transform: rotate(15deg); border-radius: 2px;
+        }
+        .tonearm-base {
+            position: absolute; top: -1px; left: -14px;
+            width: 43px; height: 43px;
+            background: radial-gradient(circle, #2a2a2e 0%, #0d0d0f 80%);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 50%;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+        }
+
+        .vinyl-container {
+            position: absolute; width: 305px; height: 305px;
+            left: 165px; top: 43px; z-index: 4;
+            transition: left 1.1s var(--ease);
+        }
+        .vinyl-disc {
+            width: 100%; height: 100%; border-radius: 50%;
+            background: radial-gradient(circle, #0d0d11 20%, #16161c 30%, #08080a 40%, #1b1b22 55%, #030304 68%, #0f0f13 70%);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.8);
+            position: relative;
+        }
+        .vinyl-disc::before {
+            content:''; position: absolute; top:0;left:0;right:0;bottom:0; border-radius:50%;
+            background: repeating-radial-gradient(rgba(0,0,0,0) 0px,rgba(0,0,0,0.75) 1px,rgba(255,255,255,0.02) 2.5px,rgba(0,0,0,0.8) 4px);
+            pointer-events: none;
+        }
+        .vinyl-sheen {
+            position:absolute;top:0;left:0;width:100%;height:100%;border-radius:50%;
+            background: conic-gradient(from 0deg,rgba(255,255,255,0) 0deg,rgba(255,255,255,0.04) 50deg,rgba(255,255,255,0) 100deg,rgba(255,255,255,0) 180deg,rgba(255,255,255,0.04) 230deg,rgba(255,255,255,0) 280deg,rgba(255,255,255,0) 360deg);
+            mix-blend-mode: screen; pointer-events:none;
+        }
+        .center-label {
+            position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+            width:95px;height:95px;border-radius:50%;
+            background:#0b0b0d;border:1px solid rgba(212,175,55,0.35);
+            display:flex;flex-direction:column;justify-content:center;align-items:center;
+            box-shadow:0 4px 15px rgba(0,0,0,0.6);
+        }
+        .center-label span{font-family:var(--serif);font-size:0.46rem;letter-spacing:2px;color:#fff;font-weight:500;text-align:center;width:80%;line-height:1.3;}
+        .center-label mini{font-size:0.38rem;color:var(--gold);text-transform:uppercase;letter-spacing:1.5px;margin-top:5px;}
+        .spindle-hole{width:11px;height:11px;background:var(--bg);border-radius:50%;margin-top:7px;border:1px solid rgba(255,255,255,0.15);}
+
+        .player-deck.loaded .vinyl-container { left: 48px; }
+        .player-deck.loaded .tonearm { transform: rotate(4deg); }
+        .spinning .vinyl-disc { animation: luxurySpin 4.2s linear infinite; }
+        @keyframes luxurySpin { 100% { transform: rotate(360deg); } }
+
+        .controls-hud {
+            position: absolute; bottom: 68px; width: 78%;
+            display: flex; align-items: center; justify-content: space-between;
+            background: rgba(18,18,22,0.5); border: 1px solid rgba(255,255,255,0.06);
+            padding: 12px 22px; border-radius: 40px;
+            opacity: 0; transform: translateY(12px);
+            transition: all 0.6s var(--ease); pointer-events: none;
+            backdrop-filter: blur(12px);
+        }
+        .player-deck.loaded .controls-hud { opacity:1; transform:translateY(0); pointer-events:all; }
+
+        .volume-container { display:flex; align-items:center; gap:12px; width:55%; }
+        .volume-icon { font-size:0.6rem;letter-spacing:2px;color:var(--muted);text-transform:uppercase; }
+        .volume-slider {
+            -webkit-appearance:none; appearance:none;
+            width:100%; height:1px; background:rgba(255,255,255,0.08); outline:none;
+        }
+        .volume-slider::-webkit-slider-thumb {
+            -webkit-appearance:none; appearance:none;
+            width:6px;height:6px;border-radius:50%;background:var(--gold);
+            box-shadow:0 0 10px var(--gold-glow); cursor:pointer;
+        }
+
+        .equalizer-wave { display:flex; align-items:center; gap:3px; height:24px; }
+        .eq-bar { width:3px; height:4px; background:var(--gold); border-radius:2px; opacity:0.4; }
+        .equalizer-wave.spinning-active .eq-bar {
+            opacity:1;
+            animation: eqPulse 0.9s ease-in-out infinite alternate;
+        }
+        .equalizer-wave.spinning-active .eq-bar:nth-child(1){animation-delay:0.0s;}
+        .equalizer-wave.spinning-active .eq-bar:nth-child(2){animation-delay:0.15s;}
+        .equalizer-wave.spinning-active .eq-bar:nth-child(3){animation-delay:0.08s;}
+        .equalizer-wave.spinning-active .eq-bar:nth-child(4){animation-delay:0.22s;}
+        @keyframes eqPulse {
+            0%{height:4px;background:rgba(212,175,55,0.5);}
+            100%{height:22px;background:var(--gold);}
+        }
+
+        .status-ui {
+            position:absolute;bottom:30px;
+            font-size:0.58rem;text-transform:uppercase;letter-spacing:3px;color:var(--muted);
+            text-align:center; transition:color 0.3s;
+        }
+        .player-deck.loaded .status-ui { color:rgba(212,175,55,0.7); }
+
+        /* ── SECTION 2: CATEGORIES ── */
+        .section-cats {
+            background: #FF5F38;
+            padding: 90px 7% 100px;
+            position: relative; z-index: 3;
+            border-top: 20px solid var(--bg); border-bottom: 20px solid var(--bg);
+        }
+
+        .section-cats-inner { max-width: 1200px; margin: 0 auto; }
+
+        .cat-header {
+            display: flex; justify-content: center; align-items: center;
+            margin-bottom: 50px; position: relative;
+        }
+        .cat-title {
+            font-family: var(--serif); font-size: clamp(2rem, 4vw, 3.5rem);
+            font-weight: 700; letter-spacing: 8px; color: #000;
+            text-transform: uppercase;
+        }
+        .cat-see-all {
+            position: absolute; right: 0;
+            font-size: 0.68rem; text-transform: uppercase; letter-spacing: 2px;
+            color: #000; padding: 10px 22px;
+            border: 1px solid rgba(0,0,0,0.4); border-radius: 40px;
+            text-decoration: none; transition: all 0.3s var(--ease);
+        }
+        .cat-see-all:hover { background:#000; color:#FF5F38; }
+
+        .cat-grid {
+            display: grid; grid-template-columns: repeat(3,1fr);
+            gap: 30px; width: 100%; margin-top: 70px;
+        }
+
+        .cat-card {
+            background: #0D0D0F; border-radius: 20px; padding: 24px;
+            display: flex; flex-direction: column; justify-content: flex-end;
+            height: 250px; position: relative; overflow: visible;
+            text-decoration: none; cursor: pointer;
+            transition: transform 0.4s var(--ease), box-shadow 0.4s var(--ease);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        }
+        .cat-card:hover { transform: translateY(-10px); box-shadow: 0 25px 50px rgba(0,0,0,0.5); }
+
+        .cat-visual {
+            position: absolute; top: -50px; left: 50%; transform: translateX(-50%);
+            width: 100%; height: 200px;
+            display: flex; justify-content: center; align-items: center;
+            pointer-events: none; z-index: 10;
+        }
+
+        .cat-person {
+            height: 230px; width: auto; object-fit: contain;
+            filter: brightness(0.88) drop-shadow(0 10px 20px rgba(0,0,0,0.6));
+            transform: translateY(8px);
+            transition: transform 0.4s var(--ease), filter 0.4s ease;
+        }
+        .cat-card:hover .cat-person {
+            transform: translateY(-8px) scale(1.08);
+            filter: brightness(1) drop-shadow(0 20px 30px rgba(0,0,0,0.8));
+        }
+
+        .cat-footer {
+            display: flex; justify-content: space-between; align-items: center;
+            border-top: 1px solid rgba(255,255,255,0.06); padding-top: 14px;
+        }
+        .cat-name { font-size: 1rem; font-weight: 500; color: #fff; letter-spacing: 0.5px; }
+        .cat-arrow {
+            color: rgba(255,255,255,0.4); font-size: 1.1rem;
+            transition: transform 0.3s var(--ease), color 0.3s;
+        }
+        .cat-card:hover .cat-arrow { transform: translateX(6px); color: #fff; }
+
+        /* SONG PANEL MODAL */
+        .song-modal-overlay {
+            position: fixed; inset: 0; z-index: 500;
+            background: rgba(0,0,0,0.85);
+            backdrop-filter: blur(16px);
+            display: flex; align-items: center; justify-content: center;
+            opacity: 0; pointer-events: none;
+            transition: opacity 0.4s var(--ease);
+        }
+        .song-modal-overlay.active { opacity: 1; pointer-events: all; }
+
+        .song-modal {
+            background: #0e0e12;
+            border: 1px solid rgba(212,175,55,0.2);
+            border-radius: 24px;
+            width: 90%; max-width: 780px;
+            max-height: 88vh; overflow-y: auto;
+            padding: 52px;
+            position: relative;
+            transform: translateY(40px) scale(0.96);
+            transition: transform 0.4s var(--ease);
+            box-shadow: 0 40px 100px rgba(0,0,0,0.9), 0 0 60px rgba(212,175,55,0.05);
+        }
+        .song-modal-overlay.active .song-modal { transform: translateY(0) scale(1); }
+
+        .modal-close {
+            position: absolute; top: 22px; right: 26px;
+            width: 38px; height: 38px; border-radius: 50%;
+            background: rgba(255,255,255,0.06);
+            border: 1px solid rgba(255,255,255,0.1);
+            color: #fff; font-size: 1.1rem; cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            transition: all 0.3s;
+        }
+        .modal-close:hover { background: rgba(255,0,0,0.15); border-color: rgba(255,80,80,0.4); }
+
+        .modal-tag {
+            font-size: 0.65rem; text-transform: uppercase; letter-spacing: 6px;
+            color: var(--gold); margin-bottom: 10px;
+        }
+        .modal-title {
+            font-family: var(--display); font-size: 2.6rem; font-weight: 700;
+            margin-bottom: 8px; line-height: 1.1;
+        }
+        .modal-sub { color: var(--muted); font-size: 0.9rem; margin-bottom: 36px; }
+
+        .song-list { display: flex; flex-direction: column; gap: 12px; margin-bottom: 36px; }
+
+        .song-item {
+            display: flex; align-items: center; gap: 16px;
+            padding: 16px 20px;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.05);
+            border-radius: 14px;
+            cursor: pointer;
+            transition: all 0.3s var(--ease);
+            position: relative; overflow: hidden;
+        }
+        .song-item::before {
+            content:''; position:absolute; inset:0;
+            background: var(--gold-grad); opacity: 0;
+            transition: opacity 0.3s;
+        }
+        .song-item:hover { border-color: rgba(212,175,55,0.3); transform: translateX(6px); }
+        .song-item:hover::before { opacity: 0.04; }
+
+        .song-num {
+            font-family: var(--serif); font-size: 0.65rem; color: var(--gold);
+            width: 22px; text-align: center; flex-shrink: 0;
+            position: relative;
+        }
+        .song-cover {
+            width: 50px; height: 50px; border-radius: 10px; object-fit: cover;
+            background: #1a1a22; flex-shrink: 0;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+        }
+        .song-info { flex: 1; }
+        .song-title { font-size: 0.92rem; font-weight: 500; margin-bottom: 3px; }
+        .song-artist { font-size: 0.75rem; color: var(--muted); }
+        .song-price { font-size: 0.85rem; color: var(--gold); font-weight: 500; }
+        .song-play {
+            width: 36px; height: 36px; border-radius: 50%;
+            background: var(--gold-grad); border: none; cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            flex-shrink: 0;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .song-play:hover { transform: scale(1.15); box-shadow: 0 0 20px rgba(212,175,55,0.5); }
+        .play-tri {
+            width: 0; height: 0;
+            border-top: 6px solid transparent;
+            border-bottom: 6px solid transparent;
+            border-left: 10px solid #000;
+            margin-left: 2px;
+        }
+
+        .modal-cta-row {
+            display: flex; gap: 14px; flex-wrap: wrap;
+        }
+        .modal-buy-btn {
+            flex: 1; padding: 16px 28px;
+            background: var(--gold-grad); color: #000;
+            font-size: 0.75rem; font-weight: 600;
+            text-transform: uppercase; letter-spacing: 3px;
+            border: none; border-radius: 8px; cursor: pointer;
+            transition: all 0.4s var(--ease);
+        }
+        .modal-buy-btn:hover { transform: translateY(-3px); box-shadow: 0 12px 30px rgba(212,175,55,0.35); }
+
+        /* ── BUY MODAL ── */
+        .buy-overlay {
+            position: fixed; inset: 0; z-index: 600;
+            background: rgba(0,0,0,0.9); backdrop-filter: blur(20px);
+            display: flex; align-items: center; justify-content: center;
+            opacity: 0; pointer-events: none;
+            transition: opacity 0.4s var(--ease);
+        }
+        .buy-overlay.active { opacity: 1; pointer-events: all; }
+
+        .buy-modal {
+            background: #0c0c10; border: 1px solid rgba(212,175,55,0.2);
+            border-radius: 28px; width: 92%; max-width: 860px;
+            max-height: 90vh; overflow-y: auto;
+            padding: 56px; position: relative;
+            transform: scale(0.94) translateY(30px);
+            transition: transform 0.4s var(--ease);
+            box-shadow: 0 60px 120px rgba(0,0,0,0.95);
+        }
+        .buy-overlay.active .buy-modal { transform: scale(1) translateY(0); }
+
+        .buy-steps {
+            display: flex; gap: 8px; margin-bottom: 44px;
+        }
+        .buy-step {
+            display: flex; align-items: center; gap: 8px;
+            font-size: 0.65rem; text-transform: uppercase; letter-spacing: 2px;
+            color: var(--muted);
+        }
+        .buy-step.active { color: var(--gold); }
+        .buy-step .step-dot {
+            width: 24px; height: 24px; border-radius: 50%;
+            border: 1px solid rgba(255,255,255,0.15);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 0.6rem;
+        }
+        .buy-step.active .step-dot {
+            background: var(--gold-grad); border: none; color: #000; font-weight: 700;
+        }
+        .step-sep { flex: 1; height: 1px; background: rgba(255,255,255,0.06); align-self: center; }
+
+        .buy-panel { display: none; }
+        .buy-panel.active { display: block; animation: fadeIn 0.4s var(--ease); }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        .buy-section-title {
+            font-family: var(--display); font-size: 2rem; font-weight: 700;
+            margin-bottom: 6px;
+        }
+        .buy-section-sub { color: var(--muted); font-size: 0.85rem; margin-bottom: 30px; }
+
+        /* VINYL CUSTOMIZER */
+        .customizer-grid {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 36px;
+        }
+
+        .vinyl-preview {
+            display: flex; flex-direction: column; align-items: center; gap: 20px;
+        }
+
+        .vinyl-3d {
+            width: 200px; height: 200px; border-radius: 50%; position: relative;
+            background: #111; box-shadow: 0 20px 50px rgba(0,0,0,0.7);
+            animation: slowSpin 8s linear infinite;
+            cursor: default;
+        }
+        @keyframes slowSpin { 100% { transform: rotate(360deg); } }
+        .vinyl-3d::before {
+            content:''; position:absolute;top:0;left:0;right:0;bottom:0;border-radius:50%;
+            background: repeating-radial-gradient(rgba(0,0,0,0) 0px,rgba(0,0,0,0.6) 1px,rgba(255,255,255,0.015) 2px,rgba(0,0,0,0.7) 3.5px);
+            pointer-events:none;
+        }
+        .vinyl-label-center {
+            position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+            width: 76px; height: 76px; border-radius: 50%;
+            display:flex;flex-direction:column;justify-content:center;align-items:center;
+            text-align:center; transition: background 0.5s;
+            border: 2px solid rgba(212,175,55,0.3);
+            overflow:hidden;
+        }
+        .vinyl-label-text {
+            font-family: var(--serif); font-size: 0.38rem; letter-spacing: 1px;
+            color: #fff; width: 90%; line-height: 1.4; position: relative; z-index: 2;
+        }
+        .vinyl-label-mini { font-size: 0.3rem; color: var(--gold); position: relative; z-index: 2; }
+
+        .vinyl-color-preview { font-size: 0.7rem; color: var(--muted); }
+
+        .customizer-options { display: flex; flex-direction: column; gap: 24px; }
+
+        .option-group label {
+            display:block; font-size:0.65rem; text-transform:uppercase; letter-spacing:3px;
+            color: var(--gold); margin-bottom: 10px;
+        }
+
+        .color-swatches { display: flex; gap: 10px; flex-wrap: wrap; }
+        .swatch {
+            width: 34px; height: 34px; border-radius: 50%; cursor: pointer;
+            border: 2px solid transparent;
+            transition: transform 0.3s, border-color 0.3s;
+        }
+        .swatch:hover { transform: scale(1.2); }
+        .swatch.selected { border-color: #fff; transform: scale(1.15); box-shadow: 0 0 12px rgba(255,255,255,0.3); }
+
+        .custom-text-input {
+            width: 100%;
+            background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 8px; padding: 12px 16px;
+            color: #fff; font-size: 0.85rem; font-family: var(--sans);
+            outline: none; transition: border-color 0.3s;
+        }
+        .custom-text-input:focus { border-color: rgba(212,175,55,0.4); }
+
+        .size-options { display: flex; gap: 10px; }
+        .size-btn {
+            padding: 8px 20px; border-radius: 6px;
+            border: 1px solid rgba(255,255,255,0.12);
+            background: transparent; color: var(--muted); font-size: 0.75rem;
+            cursor: pointer; transition: all 0.3s;
+        }
+        .size-btn.selected, .size-btn:hover {
+            border-color: var(--gold); color: var(--gold);
+            background: rgba(212,175,55,0.07);
+        }
+
+        /* GIFT SECTION */
+        .gift-toggle-row {
+            display: flex; align-items: center; gap: 14px;
+            padding: 20px 24px;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.07);
+            border-radius: 14px; margin-bottom: 24px; cursor: pointer;
+            transition: all 0.3s;
+        }
+        .gift-toggle-row:hover { border-color: rgba(212,175,55,0.3); }
+
+        .gift-icon {
+            width: 44px; height: 44px; border-radius: 12px;
+            background: rgba(212,175,55,0.1); border: 1px solid rgba(212,175,55,0.25);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.3rem; flex-shrink: 0;
+        }
+        .gift-toggle-info { flex: 1; }
+        .gift-toggle-title { font-size: 0.9rem; font-weight: 500; margin-bottom: 2px; }
+        .gift-toggle-sub { font-size: 0.75rem; color: var(--muted); }
+
+        .toggle-switch {
+            width: 48px; height: 26px; border-radius: 13px;
+            background: rgba(255,255,255,0.1); position: relative;
+            transition: background 0.3s; flex-shrink: 0; cursor: pointer;
+        }
+        .toggle-switch.on { background: var(--gold); }
+        .toggle-switch::after {
+            content:''; position:absolute; top: 3px; left: 3px;
+            width: 20px; height: 20px; border-radius: 50%; background: #fff;
+            transition: transform 0.3s var(--ease);
+            box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+        }
+        .toggle-switch.on::after { transform: translateX(22px); }
+
+        .gift-form {
+            display: none; flex-direction: column; gap: 14px;
+            padding: 24px; background: rgba(212,175,55,0.04);
+            border: 1px solid rgba(212,175,55,0.15); border-radius: 14px;
+            margin-bottom: 24px;
+            animation: fadeIn 0.4s var(--ease);
+        }
+        .gift-form.show { display: flex; }
+
+        .gift-form-row { display: flex; gap: 14px; }
+        .gift-form-row input, .gift-form textarea {
+            flex: 1; background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.1); border-radius: 8px;
+            padding: 12px 16px; color: #fff; font-size: 0.85rem;
+            font-family: var(--sans); outline: none; transition: border-color 0.3s;
+            resize: none;
+        }
+        .gift-form-row input:focus, .gift-form textarea:focus { border-color: rgba(212,175,55,0.4); }
+        .gift-form label { font-size: 0.62rem; text-transform: uppercase; letter-spacing: 2px; color: var(--muted); }
+
+        /* ORDER SUMMARY */
+        .order-summary {
+            background: rgba(255,255,255,0.025);
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 16px; padding: 28px; margin-bottom: 28px;
+        }
+        .order-row {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+        .order-row:last-child { border: none; }
+        .order-row.total { margin-top: 8px; }
+        .order-row.total .order-label { font-size: 1rem; font-weight: 500; }
+        .order-row.total .order-val { font-size: 1.1rem; color: var(--gold); font-weight: 600; }
+        .order-label { font-size: 0.8rem; color: var(--muted); }
+        .order-val { font-size: 0.85rem; }
+
+        .proceed-btn {
+            width: 100%; padding: 20px;
+            background: var(--gold-grad); color: #000;
+            font-size: 0.8rem; font-weight: 600; text-transform: uppercase; letter-spacing: 4px;
+            border: none; border-radius: 10px; cursor: pointer;
+            transition: all 0.4s var(--ease);
+            box-shadow: 0 10px 30px rgba(212,175,55,0.2);
+        }
+        .proceed-btn:hover { transform: translateY(-3px); box-shadow: 0 18px 45px rgba(212,175,55,0.4); }
+
+        .back-link {
+            display: flex; align-items: center; gap: 8px;
+            color: var(--muted); font-size: 0.72rem; text-transform: uppercase;
+            letter-spacing: 2px; cursor: pointer; margin-bottom: 28px;
+            background: none; border: none; transition: color 0.3s;
+        }
+        .back-link:hover { color: var(--text); }
+
+        /* SUCCESS SCREEN */
+        .success-screen {
+            text-align: center; padding: 40px 0;
+        }
+        .success-vinyl {
+            width: 120px; height: 120px; border-radius: 50%;
+            background: radial-gradient(circle, #0d0d11 30%, #1a1a22 60%, #030303);
+            margin: 0 auto 28px; position: relative;
+            animation: luxurySpin 4s linear infinite;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.6), 0 0 30px rgba(212,175,55,0.15);
+        }
+        .success-vinyl::before {
+            content:''; position:absolute;top:0;left:0;right:0;bottom:0;border-radius:50%;
+            background: repeating-radial-gradient(rgba(0,0,0,0) 0px,rgba(0,0,0,0.7) 1px,rgba(255,255,255,0.02) 2px,rgba(0,0,0,0.7) 3px);
+        }
+        .success-vinyl-center {
+            position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+            width:38px;height:38px;border-radius:50%;
+            background:#0b0b0d;border:1px solid rgba(212,175,55,0.5);
+        }
+        .success-check {
+            font-size: 2.5rem; margin-bottom: 16px;
+            animation: popIn 0.6s var(--ease);
+        }
+        @keyframes popIn { from{transform:scale(0);opacity:0;} to{transform:scale(1);opacity:1;} }
+        .success-title { font-family:var(--display); font-size:2.2rem; font-weight:700; margin-bottom:10px; }
+        .success-sub { color:var(--muted); font-size:0.9rem; line-height:1.7; margin-bottom:32px; }
+        .confetti-bar {
+            display: flex; justify-content: center; gap: 8px; margin-bottom: 32px;
+        }
+        .confetti-dot {
+            width: 8px; height: 8px; border-radius: 50%;
+            animation: confettiBounce 0.8s var(--ease) infinite alternate;
+        }
+        @keyframes confettiBounce { to { transform: translateY(-12px); } }
+
+        /* ── BEST SELLERS ── */
+        .section-sellers {
+            background: var(--bg); padding: 80px 7%;
+            position: relative; z-index: 3;
+        }
+        .section-sellers-inner { max-width: 1200px; margin: 0 auto; }
+        .sellers-header { text-align: center; margin-bottom: 20px; }
+        .sellers-tag { font-size:0.68rem;letter-spacing:5px;text-transform:uppercase;color:var(--gold);margin-bottom:8px;font-weight:500; }
+        .sellers-title {
+            font-family:var(--serif); font-size:clamp(2rem,4vw,3.2rem); font-weight:400;
+            text-transform:uppercase; letter-spacing:6px;
+            background: linear-gradient(180deg,#fff 60%,rgba(255,255,255,0.5));
+            -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent;
+        }
+
+        .arc-container {
+            display:flex; justify-content:center; align-items:flex-end;
+            position:relative; width:100%; margin-top:30px; height:360px;
+        }
+
+        .product-card {
+            background: rgba(18,18,22,0.55); border:1px solid rgba(255,255,255,0.04);
+            border-radius:20px; width:210px; height:340px;
+            display:flex; flex-direction:column; overflow:hidden;
+            backdrop-filter:blur(30px);
+            box-shadow:0 20px 40px rgba(0,0,0,0.5);
+            margin:0 -24px; position:relative;
+            transition: transform 0.6s var(--ease), border-color 0.4s, box-shadow 0.6s var(--ease), filter 0.4s;
+            transform-origin: bottom center;
+            filter:brightness(0.6);
+        }
+        .product-card:nth-child(1){transform:rotate(-18deg) translateY(22px);z-index:1;}
+        .product-card:nth-child(2){transform:rotate(-12deg) translateY(8px);z-index:2;}
+        .product-card:nth-child(3){transform:rotate(-6deg) translateY(1px);z-index:3;}
+        .product-card:nth-child(4){transform:rotate(0deg) translateY(-2px);z-index:4;filter:brightness(0.85);}
+        .product-card:nth-child(5){transform:rotate(6deg) translateY(1px);z-index:3;}
+        .product-card:nth-child(6){transform:rotate(12deg) translateY(8px);z-index:2;}
+        .product-card:nth-child(7){transform:rotate(18deg) translateY(22px);z-index:1;}
+
+        .product-card:hover {
+            transform:scale(1.22) rotate(0deg) translateY(-42px) !important;
+            z-index:15 !important; filter:brightness(1) !important;
+            border-color:rgba(212,175,55,0.45);
+            box-shadow:0 30px 60px rgba(0,0,0,0.8),0 0 50px rgba(212,175,55,0.18),inset 0 1px 0 rgba(255,255,255,0.1);
+        }
+        .arc-container:hover .product-card:not(:hover) { filter:brightness(0.35) blur(0.5px); }
+
+        .product-img-box { width:100%; height:155px; overflow:hidden; background:#09090b; position:relative; }
+        .product-img { width:100%;height:100%;object-fit:cover;transition:transform 1.2s var(--ease); }
+        .product-card:hover .product-img { transform:scale(1.1); }
+        .product-badge {
+            position:absolute;top:12px;left:12px;
+            background:rgba(0,0,0,0.75); border:1px solid rgba(212,175,55,0.3);
+            color:var(--gold); padding:3px 9px; border-radius:12px;
+            font-size:0.5rem; text-transform:uppercase; letter-spacing:2px; font-weight:500;
+            backdrop-filter:blur(10px); z-index:2;
+        }
+
+        .product-info { padding:16px; display:flex; flex-direction:column; flex-grow:1; }
+        .product-title { font-family:var(--serif); font-size:0.92rem; font-weight:500; color:#fff; margin-bottom:5px; line-height:1.3; letter-spacing:0.5px; }
+        .product-sub { font-size:0.62rem; color:rgba(255,255,255,0.5); margin-bottom:8px; }
+        .product-price { font-size:0.85rem; color:var(--gold); margin-top:auto; margin-bottom:14px; }
+
+        .product-cta { border-top:1px solid rgba(255,255,255,0.05); padding-top:8px; display:flex; gap:8px; }
+        .product-btn {
+            flex:1; font-size:0.58rem; font-weight:500; text-transform:uppercase; letter-spacing:2px;
+            color:#fff; background:transparent; border:1px solid rgba(255,255,255,0.15);
+            padding:7px 0; border-radius:6px; cursor:pointer; transition:all 0.4s var(--ease);
+        }
+        .product-btn:hover { background:var(--gold-grad); color:#000; border-color:transparent; }
+        .product-btn.gift { border-color:rgba(212,175,55,0.2); color:var(--gold); }
+        .product-btn.gift:hover { background:rgba(212,175,55,0.15); color:var(--gold); border-color:rgba(212,175,55,0.4); }
+
+        /* ── NOW SPINNING ── */
+        .section-now {
+            background: #0a0a0d; padding: 100px 7%;
+            border-top: 1px solid rgba(255,255,255,0.03);
+            position: relative; z-index: 3;
+        }
+        .now-inner {
+            max-width: 1100px; margin: 0 auto;
+            display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center;
+        }
+        .huge-vinyl {
+            width: 400px; height: 400px; border-radius: 50%; position: relative;
+            background: radial-gradient(circle, #0d0d11 20%, #16161c 30%, #08080a 40%, #1b1b22 55%, #030304 68%, #0f0f13 70%);
+            box-shadow: 0 30px 80px rgba(0,0,0,0.8), 0 0 40px rgba(212,175,55,0.06);
+            animation: slowSpin 12s linear infinite;
+            margin: 0 auto;
+        }
+        .huge-vinyl::before {
+            content:''; position:absolute;inset:0;border-radius:50%;
+            background: repeating-radial-gradient(rgba(0,0,0,0) 0px,rgba(0,0,0,0.75) 1px,rgba(255,255,255,0.02) 2.5px,rgba(0,0,0,0.8) 4px);
+        }
+        .huge-label {
+            position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+            width:160px;height:160px;border-radius:50%;
+            background-image:url('https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?auto=format&fit=crop&w=500&q=80');
+            background-size:cover;background-position:center;
+            border:2px solid rgba(212,175,55,0.6);
+            display:flex;justify-content:center;align-items:center;
+        }
+        .huge-hole{width:14px;height:14px;background:#0d0d11;border-radius:50%;border:1px solid rgba(255,255,255,0.2);}
+
+        .ns-tag { font-size:0.78rem;text-transform:uppercase;letter-spacing:6px;color:var(--gold);margin-bottom:18px;font-weight:500;display:flex;align-items:center;gap:12px; }
+        .ns-badge { background:rgba(242,114,45,0.15);border:1px solid rgba(242,114,45,0.4);color:#f2722d;padding:4px 12px;border-radius:6px;font-size:0.6rem;letter-spacing:2px;font-weight:600;animation:pulseOrange 2s infinite; }
+        @keyframes pulseOrange{0%,100%{opacity:0.8;box-shadow:0 0 5px rgba(242,114,45,0.2);}50%{opacity:1;box-shadow:0 0 15px rgba(242,114,45,0.5);}}
+
+        .ns-title { font-family:var(--display);font-size:clamp(2.5rem,4vw,4rem);font-weight:700;line-height:1.1;margin-bottom:20px;background:linear-gradient(180deg,#fff 40%,rgba(255,255,255,0.55));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent; }
+        .ns-desc { font-size:0.95rem;font-weight:300;line-height:1.9;color:var(--muted);margin-bottom:40px; }
+
+        .ns-player { display:flex;align-items:center;gap:22px;margin-bottom:40px;background:rgba(255,255,255,0.025);padding:14px 28px;border-radius:50px;border:1px solid rgba(255,255,255,0.05);width:fit-content;backdrop-filter:blur(12px); }
+        .ns-play { width:48px;height:48px;border-radius:50%;background:var(--gold-grad);display:flex;justify-content:center;align-items:center;cursor:pointer;transition:transform 0.3s,box-shadow 0.3s;box-shadow:0 8px 20px rgba(212,175,55,0.3); }
+        .ns-play:hover{transform:scale(1.15);box-shadow:0 12px 30px rgba(212,175,55,0.5);}
+        .ns-play-icon{width:0;height:0;border-top:7px solid transparent;border-bottom:7px solid transparent;border-left:12px solid #000;margin-left:3px;}
+        .ns-waves{display:flex;align-items:center;gap:4px;height:28px;}
+        .ns-wave-bar{width:3px;height:5px;background:var(--gold);border-radius:2px;animation:nsEq 1s ease-in-out infinite alternate;}
+        .ns-wave-bar:nth-child(1){animation-delay:0.1s;height:12px;}
+        .ns-wave-bar:nth-child(2){animation-delay:0.3s;height:18px;}
+        .ns-wave-bar:nth-child(3){animation-delay:0.0s;height:28px;}
+        .ns-wave-bar:nth-child(4){animation-delay:0.2s;height:15px;}
+        .ns-wave-bar:nth-child(5){animation-delay:0.4s;height:22px;}
+        .ns-wave-bar:nth-child(6){animation-delay:0.1s;height:10px;}
+        .ns-wave-bar:nth-child(7){animation-delay:0.3s;height:24px;}
+        @keyframes nsEq{0%{transform:scaleY(0.2);}100%{transform:scaleY(1);}}
+
+        .ns-btns { display:flex; gap:16px; }
+
+        /* ── ACCESSORIES ── */
+        .section-acc { background:var(--bg); padding:100px 7%; position:relative; z-index:3; border-top:1px solid rgba(255,255,255,0.025); }
+        .acc-inner { max-width:1200px; margin:0 auto; }
+        .acc-header { text-align:center; margin-bottom:60px; }
+        .acc-tag { font-size:0.72rem;text-transform:uppercase;letter-spacing:6px;color:var(--gold);margin-bottom:12px;font-weight:500; }
+        .acc-title { font-family:var(--serif);font-size:clamp(2.5rem,4vw,4rem);font-weight:400;letter-spacing:8px;text-transform:uppercase;background:linear-gradient(180deg,#fff 50%,rgba(255,255,255,0.35));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent; }
+
+        .acc-grid { display:flex; height:560px; gap:18px; }
+        .acc-card {
+            position:relative;flex:1;border-radius:24px;overflow:hidden;
+            background:#09090c;border:1px solid rgba(255,255,255,0.03);
+            display:flex;flex-direction:column;justify-content:flex-end;
+            cursor:pointer;
+            transition:flex 0.8s cubic-bezier(0.25,1,0.2,1),transform 0.4s,box-shadow 0.4s,border-color 0.4s;
+            box-shadow:0 10px 40px rgba(0,0,0,0.5);
+        }
+        .acc-card:hover { flex:5; transform:translateY(-10px); border-color:rgba(212,175,55,0.5); box-shadow:0 30px 60px rgba(0,0,0,0.8),0 0 40px rgba(212,175,55,0.2); z-index:10; }
+        .acc-card::before { content:'';position:absolute;inset:0;background:linear-gradient(0deg,rgba(6,6,8,0.95) 0%,rgba(14,14,18,0.35) 60%,rgba(14,14,18,0.05));z-index:2;pointer-events:none; }
+        .acc-bg { position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;z-index:1;transition:transform 1.4s var(--ease),filter 0.8s;filter:brightness(0.3) saturate(0%); }
+        .acc-card:hover .acc-bg { transform:scale(1.08); filter:brightness(0.65) saturate(120%); }
+        .acc-content { position:relative;z-index:3;padding:32px;transition:all 0.6s cubic-bezier(0.25,1,0.2,1); }
+        .acc-title-card {
+            font-family:var(--serif);font-size:1.4rem;font-weight:500;color:#fff;letter-spacing:2px;
+            transform:rotate(-90deg) translate(-8px,-16px);transform-origin:left bottom;
+            white-space:nowrap;opacity:0.8;position:absolute;bottom:100px;left:50%;
+            transition:all 0.6s cubic-bezier(0.25,1,0.2,1);
+        }
+        .acc-card:hover .acc-title-card { font-size:2.5rem;color:var(--gold);transform:rotate(0) translate(0,0);position:relative;bottom:auto;left:auto;opacity:1;margin-bottom:12px; }
+        .acc-link { font-size:0.75rem;text-transform:uppercase;letter-spacing:4px;color:#fff;opacity:0;max-height:0;overflow:hidden;transform:translateY(16px);transition:all 0.5s cubic-bezier(0.25,1,0.2,1) 0.1s; }
+        .acc-card:hover .acc-link { opacity:1;max-height:40px;transform:translateY(0); }
+
+        /* ── WHY VINYL ── */
+        .section-why {
+            background:#050507; padding:110px 7%; z-index:3; position:relative;
+            border-top:1px solid rgba(255,255,255,0.025);
+        }
+        .why-inner { max-width:1100px; margin:0 auto; display:grid; grid-template-columns:1fr 1fr; gap:80px; align-items:center; }
+        .why-visual { position:relative; border-radius:24px; overflow:hidden; height:500px; }
+        .why-img { width:100%; height:100%; object-fit:cover; filter:brightness(0.6); transition:transform 1.5s var(--ease); }
+        .why-visual:hover .why-img { transform:scale(1.05); }
+        .why-img-overlay {
+            position:absolute;inset:0;
+            background:linear-gradient(to top, rgba(5,5,7,0.9) 0%, transparent 50%);
+            display:flex;flex-direction:column;justify-content:flex-end;padding:36px;
+        }
+        .why-img-tag { font-size:0.65rem;text-transform:uppercase;letter-spacing:5px;color:var(--gold);margin-bottom:8px; }
+        .why-img-title { font-family:var(--display);font-size:1.8rem;font-weight:700;line-height:1.2; }
+
+        .why-text { }
+        .why-luxury-tag { font-size:0.68rem;text-transform:uppercase;letter-spacing:6px;color:var(--gold);font-weight:500;margin-bottom:12px; }
+        .why-title { font-family:var(--display);font-size:clamp(2.5rem,4vw,4rem);font-weight:700;margin-bottom:48px; }
+        .why-features { display:flex;flex-direction:column;gap:28px; }
+        .why-feat { display:flex;gap:22px;align-items:flex-start;padding:20px;border-radius:14px;border:1px solid transparent;transition:border-color 0.3s,background 0.3s; }
+        .why-feat:hover { border-color:rgba(212,175,55,0.15);background:rgba(212,175,55,0.03); }
+        .why-feat-num { font-family:var(--serif);font-size:1.6rem;color:rgba(212,175,55,0.4);flex-shrink:0;width:40px;font-weight:700; }
+        .why-feat h3 { font-size:0.95rem;font-weight:500;margin-bottom:6px;letter-spacing:0.5px; }
+        .why-feat p { font-size:0.85rem;color:var(--muted);line-height:1.7; }
+
+        /* ── TESTIMONIALS ── */
+        .section-test { background:var(--bg); padding:100px 7%; z-index:3; position:relative; }
+        .test-inner { max-width:1200px; margin:0 auto; }
+        .test-header { text-align:center; margin-bottom:50px; }
+        .test-tag { font-size:0.68rem;text-transform:uppercase;letter-spacing:5px;color:var(--gold);font-weight:500;margin-bottom:10px; }
+        .test-title { font-family:var(--serif);font-size:clamp(2rem,4vw,3rem);letter-spacing:5px;text-transform:uppercase; }
+        .test-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:24px; }
+        .test-card {
+            background:rgba(14,14,18,0.5); border:1px solid rgba(255,255,255,0.05); border-radius:20px;
+            padding:32px; transition:all 0.4s var(--ease);
+        }
+        .test-card:hover { border-color:rgba(212,175,55,0.2); transform:translateY(-6px); box-shadow:0 20px 50px rgba(0,0,0,0.5); }
+        .stars { color:var(--gold); font-size:0.85rem; margin-bottom:16px; letter-spacing:3px; }
+        .test-quote { font-size:0.9rem; color:var(--muted); line-height:1.8; font-style:italic; margin-bottom:24px; font-weight:300; }
+        .test-author { display:flex; align-items:center; gap:14px; }
+        .test-avatar { width:42px;height:42px;border-radius:50%;object-fit:cover;border:1px solid rgba(212,175,55,0.3); }
+        .test-name { font-size:0.82rem; font-weight:500; }
+        .test-role { font-size:0.68rem; color:var(--muted); }
+
+        /* ── NEWSLETTER ── */
+        .section-news { background:#040406; padding:100px 7%; z-index:3; position:relative; border-top:1px solid rgba(255,255,255,0.03); }
+        .news-inner { max-width:650px; margin:0 auto; text-align:center; }
+        .news-title { font-family:var(--display);font-size:clamp(2rem,4vw,3.5rem);font-weight:700;margin-bottom:12px; }
+        .news-sub { color:var(--muted); font-size:0.95rem; margin-bottom:36px; line-height:1.7; }
+        .news-form { display:flex; gap:12px; max-width:480px; margin:0 auto; }
+        .news-input {
+            flex:1; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.1);
+            border-radius:8px; padding:16px 20px; color:#fff; font-size:0.85rem;
+            font-family:var(--sans); outline:none; transition:border-color 0.3s;
+        }
+        .news-input:focus { border-color:rgba(212,175,55,0.4); }
+        .news-btn {
+            padding:16px 28px; background:var(--gold-grad); color:#000;
+            font-size:0.72rem; font-weight:600; text-transform:uppercase; letter-spacing:3px;
+            border:none; border-radius:8px; cursor:pointer; white-space:nowrap;
+            transition:all 0.4s var(--ease);
+        }
+        .news-btn:hover { transform:translateY(-3px); box-shadow:0 12px 30px rgba(212,175,55,0.35); }
+
+        /* ── TIMELINE ── */
+        .section-timeline {
+            background:#030304; padding:100px 7%; z-index:3; position:relative;
+            transition: background-color 0.6s var(--ease);
+        }
+        .timeline-header { text-align:center; margin-bottom:60px; }
+        .timeline-tag { font-size:0.68rem;text-transform:uppercase;letter-spacing:5px;color:var(--gold);font-weight:500;margin-bottom:10px; }
+        .timeline-title { font-family:var(--serif);font-size:clamp(2rem,4vw,3.2rem);letter-spacing:6px;text-transform:uppercase;background:linear-gradient(180deg,#fff 60%,rgba(255,255,255,0.45));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent; }
+        .timeline-track { display:flex; gap:24px; overflow-x:auto; padding-top:20px; padding-bottom:20px; margin-top:-20px; scrollbar-width:none; }
+        .timeline-track::-webkit-scrollbar { display:none; }
+        .era-card {
+            flex:1; min-width:180px; background:rgba(255,255,255,0.025);
+            border:1px solid rgba(255,255,255,0.06); border-radius:20px; padding:28px 24px;
+            text-align:center; cursor:pointer; transition:all 0.5s var(--ease);
+            display:flex; flex-direction:column; align-items:center; gap:20px;
+        }
+        .era-card:hover { transform:translateY(-12px); border-color:rgba(212,175,55,0.4); box-shadow:0 20px 50px rgba(0,0,0,0.6); }
+        .era-year { font-family:var(--serif);font-size:1.2rem;letter-spacing:3px;color:var(--gold); }
+        .era-vinyl { width:80px;height:80px;border-radius:50%;background:radial-gradient(circle,#111 30%,#1a1a22 60%,#060608);position:relative;box-shadow:0 8px 20px rgba(0,0,0,0.5);transition:transform 0.5s;animation:slowSpin 10s linear infinite; }
+        .era-card:hover .era-vinyl { transform:scale(1.1); }
+        .era-vinyl::after { content:'';position:absolute;inset:0;border-radius:50%;background:repeating-radial-gradient(rgba(0,0,0,0) 0,rgba(0,0,0,0.6) 1px,rgba(255,255,255,0.02) 2px,rgba(0,0,0,0.6) 3px); }
+        .era-label { position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:28px;height:28px;border-radius:50%;background:#d4af37;z-index:2; }
+        .era-title { font-size:0.85rem;font-weight:500;color:var(--muted); }
+        .era-card:hover .era-title { color:#fff; }
+        .section-timeline:has(.era-card:nth-child(1):hover){background-color:#1a1305;}
+        .section-timeline:has(.era-card:nth-child(2):hover){background-color:#1a0d1a;}
+        .section-timeline:has(.era-card:nth-child(3):hover){background-color:#0d1a2a;}
+        .section-timeline:has(.era-card:nth-child(4):hover){background-color:#1a1200;}
+        .section-timeline:has(.era-card:nth-child(5):hover){background-color:#0d1a10;}
+
+        /* ── FOOTER ── */
+        footer {
+            background:#020203; padding:100px 7% 40px;
+            z-index:3; position:relative; border-top:1px solid rgba(255,255,255,0.05);
+        }
+        .footer-quote { font-family:var(--display);font-size:clamp(2.5rem,6vw,5rem);font-weight:400;text-align:center;line-height:1.1;margin-bottom:36px; }
+        .footer-quote span { color:var(--gold);font-style:italic;display:block; }
+        .footer-wave { display:flex;gap:4px;justify-content:center;align-items:center;height:50px;margin-bottom:70px;opacity:0.5; }
+        .fw-bar { width:3px;height:5px;background:rgba(255,255,255,0.3);animation:waveAnim 1.2s infinite ease-in-out alternate;border-radius:2px; }
+        .fw-bar:nth-child(2n){animation-delay:0.2s;background:rgba(212,175,55,0.4);}
+        .fw-bar:nth-child(3n){animation-delay:0.4s;}
+        .fw-bar:nth-child(5n){animation-delay:0.6s;background:rgba(212,175,55,0.8);}
+        @keyframes waveAnim{0%{height:5px;}100%{height:44px;}}
+
+        .footer-grid { display:grid;grid-template-columns:2fr 1fr 1fr;gap:60px;border-bottom:1px solid rgba(255,255,255,0.08);padding-bottom:60px;margin-bottom:28px; }
+        .footer-logo { font-family:var(--serif);font-size:1.8rem;letter-spacing:5px;color:var(--text);text-decoration:none;display:inline-block;margin-bottom:18px; }
+        .footer-desc { color:var(--muted);font-size:0.9rem;margin-bottom:28px;line-height:1.7;max-width:280px; }
+        .social-icons { display:flex;gap:12px; }
+        .social-icon { width:42px;height:42px;border-radius:50%;border:1px solid rgba(255,255,255,0.15);display:flex;justify-content:center;align-items:center;color:#fff;text-decoration:none;font-size:0.75rem;letter-spacing:1px;transition:all 0.3s; }
+        .social-icon:hover { background:#fff;color:#000;transform:translateY(-4px); }
+        .footer-links h5 { font-size:0.95rem;margin-bottom:22px;letter-spacing:3px;text-transform:uppercase;font-weight:500; }
+        .footer-links ul { list-style:none; }
+        .footer-links li { margin-bottom:14px; }
+        .footer-links a { color:var(--muted);text-decoration:none;font-size:0.88rem;transition:color 0.3s; }
+        .footer-links a:hover { color:var(--gold); }
+        .footer-bottom { display:flex;justify-content:space-between;align-items:center;font-size:0.8rem;color:var(--muted); }
+
+        /* ── SCROLL ANIMATIONS ── */
+        .reveal { opacity: 0; transform: translateY(40px); transition: opacity 0.8s var(--ease), transform 0.8s var(--ease); }
+        .reveal.visible { opacity: 1; transform: translateY(0); }
+        .reveal-delay-1 { transition-delay: 0.1s; }
+        .reveal-delay-2 { transition-delay: 0.2s; }
+        .reveal-delay-3 { transition-delay: 0.3s; }
+
+        /* ── SCROLL PROGRESS ── */
+        .scroll-progress {
+            position: fixed; top: 0; left: 0; height: 2px; z-index: 9999;
+            background: var(--gold-grad); width: 0%;
+            transition: width 0.1s linear;
+        }
+
+        /* ── RESPONSIVE ── */
+        @media(max-width:1024px) {
+            .hero { grid-template-columns: 1fr; padding-top: 120px; text-align:center; }
+            .hero-text { align-items:center; display:flex; flex-direction:column; }
+            .hero-tag { justify-content:center; }
+            .hero-desc { text-align:center; }
+            .hero-btns { justify-content:center; }
+            .hero-deck { display:none; }
+            .cat-grid { grid-template-columns: repeat(2,1fr); }
+            .now-inner { grid-template-columns:1fr; text-align:center; }
+            .ns-player { margin:0 auto 40px; }
+            .ns-btns { justify-content:center; }
+            .huge-vinyl { margin:0 auto; }
+            .why-inner { grid-template-columns:1fr; }
+            .test-grid { grid-template-columns:repeat(2,1fr); }
+            .footer-grid { grid-template-columns:1fr; text-align:center; }
+            .footer-desc { max-width:100%; }
+            .social-icons { justify-content:center; }
+        }
+        @media(max-width:640px) {
+            .cat-grid { grid-template-columns:1fr; }
+            .test-grid { grid-template-columns:1fr; }
+            .news-form { flex-direction:column; }
+            .footer-bottom { flex-direction:column; gap:12px; text-align:center; }
+            .customizer-grid { grid-template-columns:1fr; }
+            .buy-modal { padding:28px 20px; }
+        }
+
+        /* ── GIFT WRAP ANIMATION ── */
+        @keyframes giftAppear { from{opacity:0;transform:scale(0.8) translateY(-10px);} to{opacity:1;transform:scale(1) translateY(0);} }
+    </style>
+</head>
+<body>
+
+<!-- SCROLL PROGRESS -->
+<div class="scroll-progress" id="scrollProgress"></div>
+
+<!-- CURSOR -->
+<div class="cursor-ring" id="cursorRing"></div>
+<div class="cursor-dot" id="cursorDot"></div>
+
+<!-- AMBIENT -->
+<div class="ambient">
+    <div class="glow-1"></div>
+    <div class="glow-2"></div>
+</div>
+
+<!-- HEADER -->
+<header>
+    <a href="#" class="logo">Needle & Noise</a>
+    <nav>
+        <a href="#categories">Catalog</a>
+        <a href="#sellers">Best Sellers</a>
+        <a href="#accessories">Accessories</a>
+        <a href="#" class="nav-cta">Build Vinyl</a>
+    </nav>
+</header>
+
+<!-- ══ HERO ══ -->
+<main class="hero" id="home">
+    <div class="hero-text">
+        <p class="hero-tag">The Art of High Fidelity</p>
+        <h1>Feel Music<br>Again</h1>
+        <p class="hero-desc">A pristine marriage of minimalist luxury and pure analog warmth. Curated limited-edition heavy vinyl pressings crafted exclusively for modern audiophiles.</p>
+        <div class="hero-btns">
+            <a href="#categories" class="btn-gold">Explore Archive</a>
+            <button class="btn-outline" onclick="openBuy({title:'Custom Vinyl',price:65,badge:'Build Your Own'})">Build Your Vinyl</button>
+        </div>
+    </div>
+
+    <div class="hero-deck">
+        <div class="player-deck" id="deckContainer">
+            <div class="platter"></div>
+            <div class="tonearm" id="toneArm"><div class="tonearm-base"></div></div>
+            <div class="vinyl-container" id="vinylContainer">
+                <div class="vinyl-disc" id="vinylDisc">
+                    <div class="vinyl-sheen"></div>
+                    <div class="center-label">
+                        <span>NEEDLE & NOISE</span>
+                        <mini>Stereo A</mini>
+                        <div class="spindle-hole"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="controls-hud">
+                <div class="volume-container">
+                    <span class="volume-icon">Vol</span>
+                    <input type="range" class="volume-slider" id="volumeSlider" min="0" max="1" step="0.01" value="0.4">
+                </div>
+                <div class="equalizer-wave" id="eqEngine">
+                    <div class="eq-bar"></div><div class="eq-bar"></div>
+                    <div class="eq-bar"></div><div class="eq-bar"></div>
+                </div>
+            </div>
+            <div class="status-ui" id="engineStatus">Click Vinyl to Load & Play</div>
+        </div>
+    </div>
+</main>
+
+<audio id="audioSource" loop>
+    <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3" type="audio/mpeg">
+</audio>
+
+<!-- ══ CATEGORIES ══ -->
+<section class="section-cats" id="categories">
+    <div class="section-cats-inner">
+        <div class="cat-header">
+            <h2 class="cat-title">Shop By Age</h2>
+        </div>
+        <div class="cat-grid">
+            <!-- TEEN -->
+            <div class="cat-card" onclick="openSongs('teen')">
+                <div class="cat-visual">
+                    <img src="Models\teen.png" class="cat-person" alt="Teens">
+                </div>
+                <div class="cat-footer">
+                    <span class="cat-name">Teens</span>
+                    <span class="cat-arrow">›</span>
+                </div>
+            </div>
+            <!-- ADULT -->
+            <div class="cat-card" onclick="openSongs('adult')">
+                <div class="cat-visual">
+                    <img src="Models\adult.png" class="cat-person" alt="Adults">
+                </div>
+                <div class="cat-footer">
+                    <span class="cat-name">Adults</span>
+                    <span class="cat-arrow">›</span>
+                </div>
+            </div>
+            <!-- SENIOR -->
+            <div class="cat-card" onclick="openSongs('senior')">
+                <div class="cat-visual">
+                    <img src="Models\senior.png" class="cat-person" alt="Seniors">
+                </div>
+                <div class="cat-footer">
+                    <span class="cat-name">Seniors</span>
+                    <span class="cat-arrow">›</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ══ SONG MODAL ══ -->
+<div class="song-modal-overlay" id="songOverlay">
+    <div class="song-modal" id="songModal">
+        <button class="modal-close" onclick="closeSongs()">✕</button>
+        <p class="modal-tag" id="songTag">Curated For You</p>
+        <h2 class="modal-title" id="songTitle">Teens Collection</h2>
+        <p class="modal-sub" id="songSub">Top picks for your generation</p>
+        <div class="song-list" id="songList"></div>
+        <div class="modal-cta-row">
+            <button class="modal-buy-btn" onclick="openBuyFromModal()">🎵 Order Full Vinyl Pack</button>
+            <button class="modal-buy-btn" style="background:rgba(212,175,55,0.1);color:var(--gold);border:1px solid rgba(212,175,55,0.3);" onclick="openGiftFromModal()">🎁 Send As a Gift</button>
+        </div>
+    </div>
+</div>
+
+<!-- ══ BEST SELLERS ══ -->
+<section class="section-sellers reveal" id="sellers">
+    <div class="section-sellers-inner">
+        <div class="sellers-header">
+            <p class="sellers-tag">Curated Masterpieces</p>
+            <h2 class="sellers-title">Best Sellers</h2>
+        </div>
+        <div class="arc-container">
+            <!-- Cards -->
+            <div class="product-card">
+                <span class="product-badge">Legendary</span>
+                <div class="product-img-box"><img src="https://images.unsplash.com/photo-1498038432885-c6f3f1b912ee?auto=format&fit=crop&w=500&q=80" class="product-img"></div>
+                <div class="product-info">
+                    <h3 class="product-title">Classic Rock</h3>
+                    <p class="product-sub">Queen • Beatles • Pink Floyd</p>
+                    <p class="product-price">$45</p>
+                    <div class="product-cta">
+                        <button class="product-btn" onclick="openBuy({title:'Classic Rock Vinyl',price:45,badge:'Legendary'})">Buy Now</button>
+                        <button class="product-btn gift" onclick="openGift({title:'Classic Rock Vinyl',price:45})">🎁</button>
+                    </div>
+                </div>
+            </div>
+            <div class="product-card">
+                <span class="product-badge">Soundtrack</span>
+                <div class="product-img-box"><img src="https://images.unsplash.com/photo-1578632767115-351597cf2477?auto=format&fit=crop&w=500&q=80" class="product-img"></div>
+                <div class="product-info">
+                    <h3 class="product-title">Anime OST</h3>
+                    <p class="product-sub">Lo-Fi • Anime • Japanese</p>
+                    <p class="product-price">$38</p>
+                    <div class="product-cta">
+                        <button class="product-btn" onclick="openBuy({title:'Anime OST Vinyl',price:38,badge:'Soundtrack'})">Buy Now</button>
+                        <button class="product-btn gift" onclick="openGift({title:'Anime OST Vinyl',price:38})">🎁</button>
+                    </div>
+                </div>
+            </div>
+            <div class="product-card" style="border-color:rgba(0,240,255,0.2);">
+                <span class="product-badge" style="border-color:rgba(0,240,255,0.4);color:#00f0ff;">Chill Beats</span>
+                <div class="product-img-box"><img src="https://images.unsplash.com/photo-1518609878373-06d740f60d8b?auto=format&fit=crop&w=500&q=80" class="product-img"></div>
+                <div class="product-info">
+                    <h3 class="product-title">Lo-Fi & Indie</h3>
+                    <p class="product-sub">Late night echoes</p>
+                    <p class="product-price">$32</p>
+                    <div class="product-cta">
+                        <button class="product-btn" onclick="openBuy({title:'Lo-Fi & Indie Vinyl',price:32,badge:'Chill Beats'})">Buy Now</button>
+                        <button class="product-btn gift" onclick="openGift({title:'Lo-Fi & Indie Vinyl',price:32})">🎁</button>
+                    </div>
+                </div>
+            </div>
+            <div class="product-card" style="border-color:rgba(212,175,55,0.15);">
+                <span class="product-badge">Vintage Gold</span>
+                <div class="product-img-box"><img src="https://images.unsplash.com/photo-1533174072545-7a4b6ad7a6c3?auto=format&fit=crop&w=500&q=80" class="product-img"></div>
+                <div class="product-info">
+                    <h3 class="product-title">Bollywood Classics</h3>
+                    <p class="product-sub">Golden era melodies</p>
+                    <p class="product-price">$28</p>
+                    <div class="product-cta">
+                        <button class="product-btn" onclick="openBuy({title:'Bollywood Classics Vinyl',price:28,badge:'Vintage Gold'})">Buy Now</button>
+                        <button class="product-btn gift" onclick="openGift({title:'Bollywood Classics Vinyl',price:28})">🎁</button>
+                    </div>
+                </div>
+            </div>
+            <div class="product-card">
+                <span class="product-badge">Smooth Session</span>
+                <div class="product-img-box"><img src="https://images.unsplash.com/photo-1511192336575-5a79af67a629?auto=format&fit=crop&w=500&q=80" class="product-img"></div>
+                <div class="product-info">
+                    <h3 class="product-title">Jazz & Blues</h3>
+                    <p class="product-sub">Smooth timeless sessions</p>
+                    <p class="product-price">$35</p>
+                    <div class="product-cta">
+                        <button class="product-btn" onclick="openBuy({title:'Jazz & Blues Vinyl',price:35,badge:'Smooth Session'})">Buy Now</button>
+                        <button class="product-btn gift" onclick="openGift({title:'Jazz & Blues Vinyl',price:35})">🎁</button>
+                    </div>
+                </div>
+            </div>
+            <div class="product-card">
+                <span class="product-badge">Exclusive Drop</span>
+                <div class="product-img-box"><img src="https://images.unsplash.com/photo-1603048588665-791ca8aea617?auto=format&fit=crop&w=500&q=80" class="product-img"></div>
+                <div class="product-info">
+                    <h3 class="product-title">Limited Editions</h3>
+                    <p class="product-sub">Rare echoes for collectors</p>
+                    <p class="product-price">$95</p>
+                    <div class="product-cta">
+                        <button class="product-btn" onclick="openBuy({title:'Limited Edition Vinyl',price:95,badge:'Exclusive Drop'})">Buy Now</button>
+                        <button class="product-btn gift" onclick="openGift({title:'Limited Edition Vinyl',price:95})">🎁</button>
+                    </div>
+                </div>
+            </div>
+            <div class="product-card">
+                <span class="product-badge">Nostalgia</span>
+                <div class="product-img-box"><img src="https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&w=500&q=80" class="product-img"></div>
+                <div class="product-info">
+                    <h3 class="product-title">Gaming OST</h3>
+                    <p class="product-sub">Play the memories</p>
+                    <p class="product-price">$40</p>
+                    <div class="product-cta">
+                        <button class="product-btn" onclick="openBuy({title:'Gaming OST Vinyl',price:40,badge:'Nostalgia'})">Buy Now</button>
+                        <button class="product-btn gift" onclick="openGift({title:'Gaming OST Vinyl',price:40})">🎁</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ══ NOW SPINNING ══ -->
+<section class="section-now reveal" id="nowspinning">
+    <div class="now-inner">
+        <div class="now-spinning-left">
+            <div class="huge-vinyl">
+                <div class="huge-label"><div class="huge-hole"></div></div>
+            </div>
+        </div>
+        <div>
+            <div class="ns-tag">Now Spinning <span class="ns-badge">LIMITED PRESSING</span></div>
+            <h2 class="ns-title">Dark Side<br>Collection</h2>
+            <p class="ns-desc">Feel analog warmth like never before. Remastered from original analog tapes, this 180g pressing delivers an uncompressed soundstage that digital simply cannot replicate.</p>
+            <div class="ns-player">
+                <div class="ns-play"><div class="ns-play-icon"></div></div>
+                <div class="ns-waves">
+                    <div class="ns-wave-bar"></div><div class="ns-wave-bar"></div>
+                    <div class="ns-wave-bar"></div><div class="ns-wave-bar"></div>
+                    <div class="ns-wave-bar"></div><div class="ns-wave-bar"></div>
+                    <div class="ns-wave-bar"></div>
+                </div>
+            </div>
+            <div class="ns-btns">
+                <button class="btn-outline">Listen Sample</button>
+                <button class="btn-gold" onclick="openBuy({title:'Dark Side Collection',price:79,badge:'Limited Pressing'})">Buy Vinyl</button>
+                <button class="btn-outline" onclick="openGift({title:'Dark Side Collection',price:79})">🎁 Gift</button>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ══ ACCESSORIES ══ -->
+<section class="section-acc reveal" id="accessories">
+    <div class="acc-inner">
+        <div class="acc-header">
+            <p class="acc-tag">Complete Your Setup</p>
+            <h2 class="acc-title">Accessories</h2>
+        </div>
+        <div class="acc-grid">
+            <a href="#" class="acc-card">
+                <img src="https://i.pinimg.com/1200x/9f/ec/47/9fec47fd8bdc832fc20e5b2a7fbf3241.jpg" class="acc-bg">
+                <div class="acc-content">
+                    <h3 class="acc-title-card">Turntables</h3>
+                    <span class="acc-link">Explore Hardware →</span>
+                </div>
+            </a>
+            <a href="#" class="acc-card">
+                <img src="https://i.pinimg.com/1200x/ae/d2/3e/aed23e128191b164289055edcee2190a.jpg" class="acc-bg">
+                <div class="acc-content">
+                    <h3 class="acc-title-card">Headphones</h3>
+                    <span class="acc-link">Shop Audio →</span>
+                </div>
+            </a>
+            <a href="#" class="acc-card">
+                <img src="https://i.pinimg.com/1200x/af/58/e3/af58e313d71f20a16ef768030a2fb1c0.jpg" class="acc-bg">
+                <div class="acc-content">
+                    <h3 class="acc-title-card">Vinyl Storage</h3>
+                    <span class="acc-link">Organize →</span>
+                </div>
+            </a>
+            <a href="#" class="acc-card">
+                <img src="https://i.pinimg.com/736x/9d/69/de/9d69de15b8c655e1d52242af21702cb5.jpg" class="acc-bg" style="border-color:rgba(0,240,255,0.2);">
+                <div class="acc-content">
+                    <h3 class="acc-title-card" style="">Custom Vinyl</h3>
+                    <span class="acc-link">Create Your Own →</span>
+                </div>
+            </a>
+            <a href="#" class="acc-card">
+                <img src="https://i.pinimg.com/1200x/0e/d5/3a/0ed53a25a8edc5cbd3e06571a48bc4bf.jpg" class="acc-bg">
+                <div class="acc-content">
+                    <h3 class="acc-title-card">Cleaning Kits</h3>
+                    <span class="acc-link">Maintain Fidelity →</span>
+                </div>
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- ══ WHY VINYL ══ -->
+<section class="section-why reveal" id="why">
+    <div class="why-inner">
+        <div class="why-visual">
+            <img src="https://i.pinimg.com/736x/8f/63/b9/8f63b97eb4fc93bff9765588de41b4c4.jpg" class="why-img">
+            <div class="why-img-overlay">
+                <span class="why-img-tag">The Sound Ritual</span>
+                <h3 class="why-img-title">Analog Warmth You Can Feel</h3>
+            </div>
+        </div>
+        <div class="why-text">
+            <p class="why-luxury-tag">The Luxury Experience</p>
+            <h2 class="why-title">Why Vinyl?</h2>
+            <div class="why-features">
+                <div class="why-feat">
+                    <div class="why-feat-num">I</div>
+                    <div>
+                        <h3>Pure Analog Sound</h3>
+                        <p>Uncompressed, raw, and authentic. Experience the warmth and depth of music exactly as the artist intended — completely free from digital conversion.</p>
+                    </div>
+                </div>
+                <div class="why-feat">
+                    <div class="why-feat-num">II</div>
+                    <div>
+                        <h3>Limited Collector Editions</h3>
+                        <p>Own a piece of physical history. Our catalog features rare pressings, custom hand-poured colors, and uniquely numbered editions.</p>
+                    </div>
+                </div>
+                <div class="why-feat">
+                    <div class="why-feat-num">III</div>
+                    <div>
+                        <h3>Premium Artwork & Packaging</h3>
+                        <p>Immerse yourself in heavy-weight gatefold jackets, gorgeous artist-designed posters, and premium lyric folios.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ══ TESTIMONIALS ══ -->
+<section class="section-test reveal">
+    <div class="test-inner">
+        <div class="test-header">
+            <p class="test-tag">Echoes of Our Listeners</p>
+            <h2 class="test-title">The Community</h2>
+        </div>
+        <div class="test-grid">
+            <div class="test-card">
+                <div class="stars">★★★★★</div>
+                <p class="test-quote">"Every crackle feels alive. It's not just music — it's a ritual that grounds you completely in the moment."</p>
+                <div class="test-author">
+                    <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80" class="test-avatar">
+                    <div><div class="test-name">Sarah Jenkins</div><div class="test-role">Music Collector</div></div>
+                </div>
+            </div>
+            <div class="test-card">
+                <div class="stars">★★★★★</div>
+                <p class="test-quote">"The best vinyl experience online. Their curation is flawless and the packaging is absolute perfection."</p>
+                <div class="test-author">
+                    <img src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=150&q=80" class="test-avatar">
+                    <div><div class="test-name">Marcus Thorne</div><div class="test-role">Audiophile Weekly</div></div>
+                </div>
+            </div>
+            <div class="test-card">
+                <div class="stars">★★★★★</div>
+                <p class="test-quote">"I gifted a customized vinyl to my dad and he cried. This is what music is supposed to feel like — tangible and real."</p>
+                <div class="test-author">
+                    <img src="https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=150&q=80" class="test-avatar">
+                    <div><div class="test-name">Priya Sharma</div><div class="test-role">Gift Buyer</div></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ══ NEWSLETTER ══ -->
+<section class="section-news reveal">
+    <div class="news-inner">
+        <h2 class="news-title">Join The Archive</h2>
+        <p class="news-sub">Get early access to rare drops, limited pressings, and exclusive curated playlists for your generation.</p>
+        <div class="news-form">
+            <input type="email" class="news-input" placeholder="Enter your email address...">
+            <button class="news-btn">Join Now</button>
+        </div>
+    </div>
+</section>
+
+<!-- ══ TIMELINE ══ -->
+<section class="section-timeline reveal">
+    <div class="timeline-header">
+        <p class="timeline-tag">A Journey Through Sound</p>
+        <h2 class="timeline-title">Music Eras</h2>
+    </div>
+    <div class="timeline-track">
+        <div class="era-card"><div class="era-year">1950s</div><div class="era-vinyl"><div class="era-label"></div></div><div class="era-title">Jazz Age</div></div>
+        <div class="era-card"><div class="era-year">1970s</div><div class="era-vinyl"><div class="era-label" style="background:#9b59b6;"></div></div><div class="era-title">Classic Rock</div></div>
+        <div class="era-card"><div class="era-year">1980s</div><div class="era-vinyl"><div class="era-label" style="background:#00f0ff;"></div></div><div class="era-title">Retro Synth</div></div>
+        <div class="era-card"><div class="era-year">1990s</div><div class="era-vinyl"><div class="era-label" style="background:#f1c40f;"></div></div><div class="era-title">Bollywood Gold</div></div>
+        <div class="era-card"><div class="era-year">2000s</div><div class="era-vinyl"><div class="era-label" style="background:#2ecc71;"></div></div><div class="era-title">Indie Wave</div></div>
+    </div>
+</section>
+
+<!-- ══ FOOTER ══ -->
+<footer>
+    <h2 class="footer-quote">"Echoes You Can <span>Hold.</span>"</h2>
+    <div class="footer-wave">
+        <div class="fw-bar"></div><div class="fw-bar"></div><div class="fw-bar"></div><div class="fw-bar"></div><div class="fw-bar"></div>
+        <div class="fw-bar"></div><div class="fw-bar"></div><div class="fw-bar"></div><div class="fw-bar"></div><div class="fw-bar"></div>
+        <div class="fw-bar"></div><div class="fw-bar"></div><div class="fw-bar"></div><div class="fw-bar"></div><div class="fw-bar"></div>
+        <div class="fw-bar"></div><div class="fw-bar"></div><div class="fw-bar"></div><div class="fw-bar"></div><div class="fw-bar"></div>
+        <div class="fw-bar"></div><div class="fw-bar"></div><div class="fw-bar"></div><div class="fw-bar"></div><div class="fw-bar"></div>
+        <div class="fw-bar"></div><div class="fw-bar"></div><div class="fw-bar"></div><div class="fw-bar"></div><div class="fw-bar"></div>
+    </div>
+    <div class="footer-grid">
+        <div>
+            <a href="#" class="footer-logo">Needle & Noise</a>
+            <p class="footer-desc">Crafted for audiophiles. We believe in the tactile ritual of music and the warmth only vinyl can provide.</p>
+            <div class="social-icons">
+                <a href="#" class="social-icon">IG</a>
+                <a href="#" class="social-icon">TW</a>
+                <a href="#" class="social-icon">SP</a>
+            </div>
+        </div>
+        <div class="footer-links">
+            <h5>Shop</h5>
+            <ul>
+                <li><a href="#">New Arrivals</a></li>
+                <li><a href="#">Best Sellers</a></li>
+                <li><a href="#">Custom Vinyl</a></li>
+                <li><a href="#">Gift Cards</a></li>
+            </ul>
+        </div>
+        <div class="footer-links">
+            <h5>Support</h5>
+            <ul>
+                <li><a href="#">FAQ</a></li>
+                <li><a href="#">Shipping & Returns</a></li>
+                <li><a href="#">Contact Us</a></li>
+                <li><a href="#">Privacy Policy</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        <p>© 2026 Needle & Noise. All rights reserved.</p>
+    </div>
+</footer>
+
+<!-- ══ BUY MODAL ══ -->
+<div class="buy-overlay" id="buyOverlay">
+    <div class="buy-modal">
+        <button class="modal-close" onclick="closeBuy()">✕</button>
+
+        <!-- STEPS -->
+        <div class="buy-steps">
+            <div class="buy-step active" id="step1Ind">
+                <div class="step-dot">1</div> Customize
+            </div>
+            <div class="step-sep"></div>
+            <div class="buy-step" id="step2Ind">
+                <div class="step-dot">2</div> Gift Options
+            </div>
+            <div class="step-sep"></div>
+            <div class="buy-step" id="step3Ind">
+                <div class="step-dot">3</div> Checkout
+            </div>
+        </div>
+
+        <!-- STEP 1: CUSTOMIZER -->
+        <div class="buy-panel active" id="buyStep1">
+            <h2 class="buy-section-title" id="buyProductTitle">Customize Your Vinyl</h2>
+            <p class="buy-section-sub">Make it uniquely yours before it ships.</p>
+
+            <div class="customizer-grid">
+                <div class="vinyl-preview">
+                    <div class="vinyl-3d" id="previewVinyl">
+                        <div class="vinyl-label-center" id="previewLabel" style="background:#1a1a24;">
+                            <div class="vinyl-label-text" id="previewText">NEEDLE<br>& NOISE</div>
+                            <div class="vinyl-label-mini" id="previewArtist">Stereo A</div>
+                        </div>
+                    </div>
+                    <div class="vinyl-color-preview" id="colorPreviewText">Classic Black</div>
+                    <div style="text-align:center;font-size:0.65rem;color:var(--muted);margin-top:-8px;">Live Preview</div>
+                </div>
+
+                <div class="customizer-options">
+                    <div class="option-group">
+                        <label>Vinyl Color</label>
+                        <div class="color-swatches">
+                            <div class="swatch selected" style="background:#111111;" data-color="#111" data-name="Classic Black" onclick="selectColor(this)"></div>
+                            <div class="swatch" style="background:linear-gradient(135deg,#8B0000,#DC143C);" data-color="linear-gradient(135deg,#8B0000,#DC143C)" data-name="Crimson Red" onclick="selectColor(this)"></div>
+                            <div class="swatch" style="background:linear-gradient(135deg,#1a0050,#6600cc);" data-color="linear-gradient(135deg,#1a0050,#6600cc)" data-name="Midnight Purple" onclick="selectColor(this)"></div>
+                            <div class="swatch" style="background:linear-gradient(135deg,#003366,#0066cc);" data-color="linear-gradient(135deg,#003366,#0066cc)" data-name="Ocean Blue" onclick="selectColor(this)"></div>
+                            <div class="swatch" style="background:linear-gradient(135deg,#d4af37,#f3e5ab);" data-color="linear-gradient(135deg,#d4af37,#f3e5ab)" data-name="Gold Edition" onclick="selectColor(this)"></div>
+                            <div class="swatch" style="background:linear-gradient(135deg,#00f0ff,#0066aa);" data-color="linear-gradient(135deg,#00f0ff,#0066aa)" data-name="Neon Cyan" onclick="selectColor(this)"></div>
+                            <div class="swatch" style="background:linear-gradient(135deg,#ff4500,#ff8c00);" data-color="linear-gradient(135deg,#ff4500,#ff8c00)" data-name="Sunset Orange" onclick="selectColor(this)"></div>
+                            <div class="swatch" style="background:linear-gradient(135deg,#2ecc71,#006633);" data-color="linear-gradient(135deg,#2ecc71,#006633)" data-name="Emerald Green" onclick="selectColor(this)"></div>
+                        </div>
+                    </div>
+
+                    <div class="option-group">
+                        <label>Label Text</label>
+                        <input type="text" class="custom-text-input" id="labelTextInput" placeholder="e.g. For Dad, With Love" maxlength="20" oninput="updatePreviewText(this.value)">
+                    </div>
+
+                    <div class="option-group">
+                        <label>Artist / Subtitle</label>
+                        <input type="text" class="custom-text-input" id="labelArtistInput" placeholder="e.g. Beatles Greatest Hits" maxlength="22" oninput="updatePreviewArtist(this.value)">
+                    </div>
+
+                    <div class="option-group">
+                        <label>Vinyl Size</label>
+                        <div class="size-options">
+                            <button class="size-btn selected" onclick="selectSize(this,'7-inch')">7"</button>
+                            <button class="size-btn" onclick="selectSize(this,'10-inch')">10"</button>
+                            <button class="size-btn" onclick="selectSize(this,'12-inch')">12"</button>
+                        </div>
+                    </div>
+
+                    <div class="option-group">
+                        <label>Weight</label>
+                        <div class="size-options">
+                            <button class="size-btn selected" onclick="selectWeight(this,'140g')">140g</button>
+                            <button class="size-btn" onclick="selectWeight(this,'180g')">180g <span style="font-size:0.55rem;color:var(--gold);">★</span></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div style="margin-top:36px;">
+                <button class="proceed-btn" onclick="goStep(2)">Continue to Gift Options →</button>
+            </div>
+        </div>
+
+        <!-- STEP 2: GIFT -->
+        <div class="buy-panel" id="buyStep2">
+            <button class="back-link" onclick="goStep(1)">← Back</button>
+            <h2 class="buy-section-title">Gift Options</h2>
+            <p class="buy-section-sub">Turn your order into a memorable gift experience.</p>
+
+            <div class="gift-toggle-row" id="giftToggleRow" onclick="toggleGift()">
+                <div class="gift-icon">🎁</div>
+                <div class="gift-toggle-info">
+                    <div class="gift-toggle-title">Send As a Gift</div>
+                    <div class="gift-toggle-sub">Add a personal message and gift wrapping</div>
+                </div>
+                <div class="toggle-switch" id="giftToggleSwitch"></div>
+            </div>
+
+            <div class="gift-form" id="giftForm">
+                <p style="font-size:0.72rem;text-transform:uppercase;letter-spacing:3px;color:var(--gold);">Recipient Details</p>
+                <div class="gift-form-row">
+                    <div>
+                        <label>Recipient Name</label>
+                        <input type="text" placeholder="e.g. Dad, Priya, Marcus...">
+                    </div>
+                    <div>
+                        <label>Recipient Email</label>
+                        <input type="email" placeholder="they@example.com">
+                    </div>
+                </div>
+                <div>
+                    <label>Personal Message</label>
+                    <textarea rows="3" placeholder="Write a heartfelt message (max 200 chars)..." maxlength="200" style="width:100%;"></textarea>
+                </div>
+                <div class="gift-form-row">
+                    <div>
+                        <label>Delivery Date</label>
+                        <input type="date">
+                    </div>
+                    <div>
+                        <label>Gift Wrap Style</label>
+                        <select style="flex:1;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:12px 16px;color:#fff;font-size:0.85rem;outline:none;">
+                            <option>Classic Black & Gold</option>
+                            <option>Vintage Kraft Paper</option>
+                            <option>Midnight Blue Velvet</option>
+                            <option>Rose Gold Foil</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div style="margin-top:24px;">
+                <button class="proceed-btn" onclick="goStep(3)">Continue to Checkout →</button>
+            </div>
+        </div>
+
+        <!-- STEP 3: CHECKOUT -->
+        <div class="buy-panel" id="buyStep3">
+            <button class="back-link" onclick="goStep(2)">← Back</button>
+            <h2 class="buy-section-title">Order Summary</h2>
+            <p class="buy-section-sub">Review your customized vinyl order.</p>
+
+            <div class="order-summary">
+                <div class="order-row"><span class="order-label">Product</span><span class="order-val" id="summaryProduct">—</span></div>
+                <div class="order-row"><span class="order-label">Vinyl Color</span><span class="order-val" id="summaryColor">Classic Black</span></div>
+                <div class="order-row"><span class="order-label">Vinyl Size</span><span class="order-val" id="summarySize">7-inch</span></div>
+                <div class="order-row"><span class="order-label">Weight</span><span class="order-val" id="summaryWeight">140g</span></div>
+                <div class="order-row" id="giftRow" style="display:none;"><span class="order-label">🎁 Gift Wrap</span><span class="order-val" style="color:var(--gold);">+$8</span></div>
+                <div class="order-row"><span class="order-label">Shipping</span><span class="order-val">Free</span></div>
+                <div class="order-row total"><span class="order-label">Total</span><span class="order-val" id="summaryTotal">—</span></div>
+            </div>
+
+            <button class="proceed-btn" onclick="placeOrder()" id="placeOrderBtn">
+                🎵 Confirm Order & Place
+            </button>
+        </div>
+
+        <!-- SUCCESS -->
+        <div class="buy-panel" id="buySuccess">
+            <div class="success-screen">
+                <div class="success-vinyl">
+                    <div class="success-vinyl-center"></div>
+                </div>
+                <div class="confetti-bar">
+                    <div class="confetti-dot" style="background:#d4af37;animation-delay:0s;"></div>
+                    <div class="confetti-dot" style="background:#ff5f38;animation-delay:0.15s;"></div>
+                    <div class="confetti-dot" style="background:#fff;animation-delay:0.3s;"></div>
+                    <div class="confetti-dot" style="background:#00f0ff;animation-delay:0.45s;"></div>
+                    <div class="confetti-dot" style="background:#d4af37;animation-delay:0.6s;"></div>
+                </div>
+                <div class="success-check">✓</div>
+                <h2 class="success-title">Order Confirmed!</h2>
+                <p class="success-sub">Your custom vinyl is being crafted with care.<br>You'll receive a confirmation email shortly.<br><span style="color:var(--gold);">Estimated delivery: 5–7 business days</span></p>
+                <button class="btn-gold" onclick="closeBuy()">Continue Shopping</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script>
+// ── CURSOR ──
+const ring = document.getElementById('cursorRing');
+const dot = document.getElementById('cursorDot');
+let mx = 0, my = 0, rx = 0, ry = 0;
+document.addEventListener('mousemove', e => {
+    mx = e.clientX; my = e.clientY;
+    dot.style.left = mx + 'px'; dot.style.top = my + 'px';
+});
+function animateCursor() {
+    rx += (mx - rx) * 0.12;
+    ry += (my - ry) * 0.12;
+    ring.style.left = rx + 'px'; ring.style.top = ry + 'px';
+    requestAnimationFrame(animateCursor);
+}
+animateCursor();
+
+// ── SCROLL PROGRESS ──
+window.addEventListener('scroll', () => {
+    const p = document.getElementById('scrollProgress');
+    const pct = (window.scrollY / (document.body.scrollHeight - window.innerHeight)) * 100;
+    p.style.width = pct + '%';
+});
+
+// ── SCROLL REVEAL ──
+const reveals = document.querySelectorAll('.reveal');
+const ro = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); } });
+}, { threshold: 0.12 });
+reveals.forEach(r => ro.observe(r));
+
+// ── VINYL DECK ──
+const deck = document.getElementById('deckContainer');
+const vinyl = document.getElementById('vinylContainer');
+const eq = document.getElementById('eqEngine');
+const status = document.getElementById('engineStatus');
+const audio = document.getElementById('audioSource');
+const vol = document.getElementById('volumeSlider');
+audio.volume = vol.value;
+vol.addEventListener('input', e => { audio.volume = e.target.value; });
+vol.addEventListener('click', e => e.stopPropagation());
+
+deck.addEventListener('click', () => {
+    const loaded = deck.classList.contains('loaded');
+    if (!loaded) {
+        deck.classList.add('loaded');
+        status.innerText = 'READING GROOVES...';
+        setTimeout(() => {
+            audio.play().then(() => {
+                vinyl.classList.add('spinning');
+                eq.classList.add('spinning-active');
+                status.innerText = 'ANALOG STREAM ACTIVE';
+            }).catch(() => {
+                vinyl.classList.add('spinning');
+                eq.classList.add('spinning-active');
+                status.innerText = 'STREAM MUTED';
+            });
+        }, 850);
+    } else {
+        audio.pause();
+        vinyl.classList.remove('spinning');
+        eq.classList.remove('spinning-active');
+        status.innerText = 'EJECTING DECK...';
+        setTimeout(() => { deck.classList.remove('loaded'); status.innerText = 'Click Vinyl to Load & Play'; }, 400);
+    }
+});
+
+// ── SONGS DATA ──
+const songData = {
+    teen: {
+        tag: 'Ages 13–19',
+        title: 'Teens Playlist',
+        sub: 'Fresh beats, anthems & pop culture classics',
+        songs: [
+            { num: '01', title: 'Anti-Hero', artist: 'Taylor Swift', price: '$4.99', img: 'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?auto=format&fit=crop&w=100&q=80' },
+            { num: '02', title: 'Flowers', artist: 'Miley Cyrus', price: '$4.99', img: 'https://images.unsplash.com/photo-1518609878373-06d740f60d8b?auto=format&fit=crop&w=100&q=80' },
+            { num: '03', title: 'As It Was', artist: 'Harry Styles', price: '$4.99', img: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=100&q=80' },
+            { num: '04', title: 'Ghost', artist: 'Justin Bieber', price: '$4.99', img: 'https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?auto=format&fit=crop&w=100&q=80' },
+            { num: '05', title: 'Stay', artist: 'The Kid LAROI', price: '$4.99', img: 'https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?auto=format&fit=crop&w=100&q=80' },
+        ]
+    },
+    adult: {
+        tag: 'Ages 20–45',
+        title: 'Adults Collection',
+        sub: 'Timeless classics and modern essentials',
+        songs: [
+            { num: '01', title: 'Bohemian Rhapsody', artist: 'Queen', price: '$5.99', img: 'https://images.unsplash.com/photo-1498038432885-c6f3f1b912ee?auto=format&fit=crop&w=100&q=80' },
+            { num: '02', title: 'Hotel California', artist: 'Eagles', price: '$5.99', img: 'https://images.unsplash.com/photo-1511192336575-5a79af67a629?auto=format&fit=crop&w=100&q=80' },
+            { num: '03', title: 'Blinding Lights', artist: 'The Weeknd', price: '$5.99', img: 'https://images.unsplash.com/photo-1471478331149-c72f17e33c73?auto=format&fit=crop&w=100&q=80' },
+            { num: '04', title: 'Shape of You', artist: 'Ed Sheeran', price: '$5.99', img: 'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?auto=format&fit=crop&w=100&q=80' },
+            { num: '05', title: 'Someone Like You', artist: 'Adele', price: '$5.99', img: 'https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?auto=format&fit=crop&w=100&q=80' },
+        ]
+    },
+    senior: {
+        tag: 'Ages 55+',
+        title: 'Golden Era',
+        sub: 'Timeless classics that defined generations',
+        songs: [
+            { num: '01', title: 'My Way', artist: 'Frank Sinatra', price: '$6.99', img: 'https://images.unsplash.com/photo-1533174072545-7a4b6ad7a6c3?auto=format&fit=crop&w=100&q=80' },
+            { num: '02', title: 'What a Wonderful World', artist: 'Louis Armstrong', price: '$6.99', img: 'https://images.unsplash.com/photo-1465847899084-d164df4dedc6?auto=format&fit=crop&w=100&q=80' },
+            { num: '03', title: 'Yesterday', artist: 'The Beatles', price: '$6.99', img: 'https://images.unsplash.com/photo-1487180144351-b8472da7d491?auto=format&fit=crop&w=100&q=80' },
+            { num: '04', title: 'Dum Maro Dum', artist: 'R.D. Burman', price: '$6.99', img: 'https://images.unsplash.com/photo-1526478806334-5fd488fcaabc?auto=format&fit=crop&w=100&q=80' },
+            { num: '05', title: 'Moon River', artist: 'Audrey Hepburn', price: '$6.99', img: 'https://images.unsplash.com/photo-1518609878373-06d740f60d8b?auto=format&fit=crop&w=100&q=80' },
+        ]
+    }
+};
+
+let currentSongs = null;
+
+function openSongs(type) {
+    const data = songData[type];
+    currentSongs = { type, data };
+    document.getElementById('songTag').textContent = data.tag;
+    document.getElementById('songTitle').textContent = data.title;
+    document.getElementById('songSub').textContent = data.sub;
+
+    const list = document.getElementById('songList');
+    list.innerHTML = data.songs.map((s, i) => `
+        <div class="song-item" style="animation-delay:${i*0.07}s;animation:fadeIn 0.5s ${i*0.07}s var(--ease) both;">
+            <div class="song-num">${s.num}</div>
+            <img class="song-cover" src="${s.img}" alt="${s.title}" loading="lazy">
+            <div class="song-info">
+                <div class="song-title">${s.title}</div>
+                <div class="song-artist">${s.artist}</div>
+            </div>
+            <div class="song-price">${s.price}</div>
+            <button class="song-play"><div class="play-tri"></div></button>
+        </div>
+    `).join('');
+
+    document.getElementById('songOverlay').classList.add('active');
+    document.body.style.overflow = 'hidden';
+}
+
+function closeSongs() {
+    document.getElementById('songOverlay').classList.remove('active');
+    document.body.style.overflow = '';
+}
+
+function openBuyFromModal() {
+    closeSongs();
+    const type = currentSongs?.type || 'teen';
+    const data = currentSongs?.data;
+    openBuy({ title: data ? data.title + ' Vinyl Pack' : 'Vinyl Pack', price: 39, badge: data?.tag || '' });
+}
+
+function openGiftFromModal() {
+    closeSongs();
+    const data = currentSongs?.data;
+    openGift({ title: data ? data.title + ' Vinyl Pack' : 'Vinyl Pack', price: 39 });
+}
+
+// ── BUY MODAL ──
+let buyProduct = { title: 'Custom Vinyl', price: 65, badge: '' };
+let selectedColor = 'Classic Black';
+let selectedSize = '7-inch';
+let selectedWeight = '140g';
+let isGift = false;
+
+function openBuy(product) {
+    buyProduct = product;
+    document.getElementById('buyProductTitle').textContent = 'Customize: ' + product.title;
+    goStep(1);
+    document.getElementById('buyOverlay').classList.add('active');
+    document.body.style.overflow = 'hidden';
+}
+
+function openGift(product) {
+    buyProduct = product;
+    document.getElementById('buyProductTitle').textContent = 'Customize: ' + product.title;
+    goStep(1);
+    document.getElementById('buyOverlay').classList.add('active');
+    document.body.style.overflow = 'hidden';
+    // auto-enable gift on step 2
+    setTimeout(() => { goStep(2); if(!isGift) toggleGift(); }, 0);
+}
+
+function closeBuy() {
+    document.getElementById('buyOverlay').classList.remove('active');
+    document.body.style.overflow = '';
+}
+
+function goStep(n) {
+    [1,2,3,'Success'].forEach(s => {
+        const panel = document.getElementById('buyStep' + s);
+        const ind = document.getElementById('step' + (s === 'Success' ? 4 : s) + 'Ind');
+        if (panel) panel.classList.remove('active');
+        if (ind) ind.classList.remove('active');
+    });
+    if (n === 'success') {
+        document.getElementById('buySuccess').classList.add('active');
+        return;
+    }
+    document.getElementById('buyStep' + n).classList.add('active');
+    const ind = document.getElementById('step' + n + 'Ind');
+    if (ind) ind.classList.add('active');
+
+    if (n === 3) buildSummary();
+}
+
+function buildSummary() {
+    document.getElementById('summaryProduct').textContent = buyProduct.title;
+    document.getElementById('summaryColor').textContent = selectedColor;
+    document.getElementById('summarySize').textContent = selectedSize;
+    document.getElementById('summaryWeight').textContent = selectedWeight;
+    const giftRow = document.getElementById('giftRow');
+    giftRow.style.display = isGift ? 'flex' : 'none';
+    const total = buyProduct.price + (isGift ? 8 : 0);
+    document.getElementById('summaryTotal').textContent = '$' + total;
+}
+
+function placeOrder() {
+    const btn = document.getElementById('placeOrderBtn');
+    btn.textContent = '⏳ Processing...';
+    btn.disabled = true;
+    setTimeout(() => {
+        document.getElementById('buyStep3').classList.remove('active');
+        document.getElementById('buySuccess').classList.add('active');
+    }, 1600);
+}
+
+function selectColor(el) {
+    document.querySelectorAll('.swatch').forEach(s => s.classList.remove('selected'));
+    el.classList.add('selected');
+    selectedColor = el.dataset.name;
+    document.getElementById('colorPreviewText').textContent = selectedColor;
+    // Update vinyl preview color
+    const label = document.getElementById('previewLabel');
+    const colorMap = { '#111': '#1a1a24', 'linear-gradient(135deg,#8B0000,#DC143C)': '#3a0010', 'linear-gradient(135deg,#1a0050,#6600cc)': '#1a0040', 'linear-gradient(135deg,#003366,#0066cc)': '#001a3a', 'linear-gradient(135deg,#d4af37,#f3e5ab)': '#3a2e00', 'linear-gradient(135deg,#00f0ff,#0066aa)': '#001a2a', 'linear-gradient(135deg,#ff4500,#ff8c00)': '#3a1000', 'linear-gradient(135deg,#2ecc71,#006633)': '#001a0d' };
+    label.style.background = colorMap[el.dataset.color] || '#1a1a24';
+}
+
+function updatePreviewText(val) {
+    document.getElementById('previewText').textContent = val || 'NEEDLE\n& NOISE';
+}
+function updatePreviewArtist(val) {
+    document.getElementById('previewArtist').textContent = val || 'Stereo A';
+}
+
+function selectSize(el, size) {
+    document.querySelectorAll('.size-btn').forEach(b => { if (['7-inch','10-inch','12-inch'].includes(b.textContent.replace(/[^0-9-inch]/g,'').trim())) b.classList.remove('selected'); });
+    el.classList.add('selected');
+    selectedSize = size;
+}
+function selectWeight(el, w) {
+    document.querySelectorAll('.size-btn').forEach(b => { if (b.textContent.includes('g')) b.classList.remove('selected'); });
+    el.classList.add('selected');
+    selectedWeight = w;
+}
+
+function toggleGift() {
+    isGift = !isGift;
+    const sw = document.getElementById('giftToggleSwitch');
+    const form = document.getElementById('giftForm');
+    sw.classList.toggle('on', isGift);
+    form.classList.toggle('show', isGift);
+}
+
+// Close overlays on outside click
+document.getElementById('buyOverlay').addEventListener('click', e => { if(e.target === e.currentTarget) closeBuy(); });
+document.getElementById('songOverlay').addEventListener('click', e => { if(e.target === e.currentTarget) closeSongs(); });
+
+// ESC key
+document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') { closeBuy(); closeSongs(); }
+});
+
+// Parallax on hero
+document.addEventListener('mousemove', e => {
+    const left = document.getElementById('home');
+    const ax = (window.innerWidth / 2 - e.clientX) / 70;
+    const ay = (window.innerHeight / 2 - e.clientY) / 70;
+    if (left) left.style.transform = `perspective(1000px) rotateY(${ax * 0.3}deg) rotateX(${ay * -0.3}deg)`;
+});
+</script>
+</body>
+</html>
